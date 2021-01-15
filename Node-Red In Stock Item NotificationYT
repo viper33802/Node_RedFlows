@@ -1,0 +1,194 @@
+[
+    {
+        "id": "4c00655e.4cd224",
+        "type": "tab",
+        "label": "Camera InStock",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "fc7b44f9.391bb8",
+        "type": "http request",
+        "z": "4c00655e.4cd224",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://store.ui.com/collections/unifi-protect/products/unifi-protect-g3-instant-camera",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 610,
+        "y": 80,
+        "wires": [
+            [
+                "7a1134fd.fb92fc"
+            ]
+        ]
+    },
+    {
+        "id": "7a1134fd.fb92fc",
+        "type": "html",
+        "z": "4c00655e.4cd224",
+        "name": "Filter for Button",
+        "property": "payload",
+        "outproperty": "payload",
+        "tag": "button.btn.btn--full",
+        "ret": "html",
+        "as": "single",
+        "x": 260,
+        "y": 160,
+        "wires": [
+            [
+                "f404a520.2188c8"
+            ]
+        ]
+    },
+    {
+        "id": "d6736a4.4584f98",
+        "type": "change",
+        "z": "4c00655e.4cd224",
+        "name": "Add Header",
+        "rules": [
+            {
+                "t": "set",
+                "p": "headers",
+                "pt": "msg",
+                "to": "{\"user-agent\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36\"}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 410,
+        "y": 80,
+        "wires": [
+            [
+                "fc7b44f9.391bb8"
+            ]
+        ]
+    },
+    {
+        "id": "970059f3.da9168",
+        "type": "switch",
+        "z": "4c00655e.4cd224",
+        "name": "If not Sold Out",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "neq",
+                "v": "Sold Out",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 280,
+        "y": 280,
+        "wires": [
+            [
+                "28871717.7584a8",
+                "c7170424.6d1e68"
+            ]
+        ]
+    },
+    {
+        "id": "28871717.7584a8",
+        "type": "api-call-service",
+        "z": "4c00655e.4cd224",
+        "name": "Notification",
+        "server": "fc1437ec.ba4bd8",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "notify",
+        "service": "mobile_app_oneplus_a6013",
+        "entityId": "",
+        "data": "{\"title\":\"Camera In Stock\",\"message\":\"Item In Stock\",\"data\":{\"actions\":[{\"action\":\"URI\",\"title\":\"Open Product Page\",\"uri\":\"https://store.ui.com/collections/unifi-protect/products/unifi-protect-g3-instant-camera\"}]}}",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 550,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f404a520.2188c8",
+        "type": "html",
+        "z": "4c00655e.4cd224",
+        "name": "Filter for Text",
+        "property": "payload[1]",
+        "outproperty": "payload",
+        "tag": "span.text",
+        "ret": "text",
+        "as": "multi",
+        "x": 510,
+        "y": 160,
+        "wires": [
+            [
+                "970059f3.da9168"
+            ]
+        ]
+    },
+    {
+        "id": "c1edbabc.662608",
+        "type": "inject",
+        "z": "4c00655e.4cd224",
+        "name": "Start",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 210,
+        "y": 80,
+        "wires": [
+            [
+                "d6736a4.4584f98"
+            ]
+        ]
+    },
+    {
+        "id": "c7170424.6d1e68",
+        "type": "debug",
+        "z": "4c00655e.4cd224",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "fc1437ec.ba4bd8",
+        "type": "server",
+        "name": "Home Assistant",
+        "addon": true
+    }
+]
